@@ -4,6 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Deepa Priya — UI/UX · AR/VR · AI/ML</title>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600&family=Instrument+Serif:ital@0;1&family=Dancing+Script:wght@700&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -839,27 +840,24 @@ function closeMo(e){if(e.target===document.getElementById('mOv'))closeMoBtn();}
 function closeMoBtn(){document.getElementById('mOv').classList.remove('open');document.body.style.overflow='';}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMoBtn();});
 
-/* ── Contact form ── */
+/* ── EmailJS contact form ── */
+emailjs.init('NMyKLC0k8pPS9xjc3');
+
 async function handleSubmit(e){
   e.preventDefault();
   const btn=document.getElementById('cfBtn');
   btn.disabled=true;btn.textContent='Sending…';
-  const body={
+  const params={
     name:document.getElementById('cfn').value,
     email:document.getElementById('cfe').value,
     message:document.getElementById('cfm').value
   };
   try{
-    const res=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-    const data=await res.json();
-    if(res.ok&&data.success){
-      document.getElementById('contactForm').style.display='none';
-      document.getElementById('formSuccess').style.display='block';
-    } else {
-      document.getElementById('formError').style.display='block';
-      btn.disabled=false;btn.textContent='Send it →';
-    }
-  }catch{
+    await emailjs.send('service_frljjuk','template_m0kr4a5',params);
+    document.getElementById('contactForm').style.display='none';
+    document.getElementById('formSuccess').style.display='block';
+  }catch(err){
+    console.error(err);
     document.getElementById('formError').style.display='block';
     btn.disabled=false;btn.textContent='Send it →';
   }
